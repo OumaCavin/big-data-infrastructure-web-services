@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.supermarketplus.co.ke/receipt"
+           xmlns:tns="http://www.supermarketplus.co.ke/receipt"
+           elementFormDefault="qualified">
+    
+    <!-- Root element definition -->
+    <xs:element name="shopping_receipt">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="customer" type="tns:customerType"/>
+                <xs:element name="store" type="tns:storeType"/>
+                <xs:element name="items" type="tns:itemsType"/>
+                <xs:element name="pricing" type="tns:pricingType"/>
+                <xs:element name="payment" type="tns:paymentType"/>
+                <xs:element name="loyalty" type="tns:loyaltyType" minOccurs="0"/>
+                <xs:element name="transaction" type="tns:transactionType"/>
+                <xs:element name="footer" type="tns:footerType"/>
+                <xs:element name="digital_signature" type="tns:digitalSignatureType"/>
+            </xs:sequence>
+            
+            <!-- Attributes for receipt -->
+            <xs:attribute name="receipt_id" type="xs:string" use="required"/>
+            <xs:attribute name="purchase_date" type="xs:date" use="required"/>
+            <xs:attribute name="store_name" type="xs:string" use="required"/>
+            <xs:attribute name="cashier_id" type="xs:string" use="required"/>
+            <xs:attribute name="payment_method" type="xs:string" use="required"/>
+            <xs:attribute name="total_amount" type="xs:decimal" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <!-- Customer Type Definition -->
+    <xs:complexType name="customerType">
+        <xs:sequence>
+            <xs:element name="customer_id" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="phone" type="xs:string"/>
+            <xs:element name="email" type="xs:string"/>
+            <xs:element name="loyalty_member" type="xs:boolean" default="false"/>
+            <xs:element name="member_since" type="xs:date" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Store Type Definition -->
+    <xs:complexType name="storeType">
+        <xs:sequence>
+            <xs:element name="store_id" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="address" type="xs:string"/>
+            <xs:element name="city" type="xs:string"/>
+            <xs:element name="country" type="xs:string"/>
+            <xs:element name="postal_code" type="xs:string"/>
+            <xs:element name="phone" type="xs:string"/>
+            <xs:element name="email" type="xs:string"/>
+            <xs:element name="tax_id" type="xs:string"/>
+            <xs:element name="business_license" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Items Container Type -->
+    <xs:complexType name="itemsType">
+        <xs:sequence>
+            <xs:element name="item" minOccurs="5" maxOccurs="unbounded" type="tns:itemType"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Individual Item Type -->
+    <xs:complexType name="itemType">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="category" type="xs:string"/>
+            <xs:element name="subcategory" type="xs:string" minOccurs="0"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="brand" type="xs:string" minOccurs="0"/>
+            <xs:element name="barcode" type="xs:string" minOccurs="0"/>
+            <xs:element name="subtotal" type="xs:decimal"/>
+            <xs:element name="tax_applied" type="xs:boolean"/>
+            <xs:element name="discount_eligible" type="xs:boolean"/>
+        </xs:sequence>
+        
+        <!-- Item attributes -->
+        <xs:attribute name="item_id" type="xs:string" use="required"/>
+        <xs:attribute name="quantity" type="xs:positiveInteger" use="required"/>
+        <xs:attribute name="unit_price" type="xs:decimal" use="required"/>
+    </xs:complexType>
+    
+    <!-- Pricing Type Definition -->
+    <xs:complexType name="pricingType">
+        <xs:sequence>
+            <xs:element name="subtotal" type="xs:decimal"/>
+            <xs:element name="subtotal_excl_tax" type="xs:decimal"/>
+            
+            <xs:element name="tax_details" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="tax" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="xs:decimal">
+                                        <xs:attribute name="type" type="xs:string"/>
+                                        <xs:attribute name="rate" type="xs:decimal"/>
+                                        <xs:attribute name="amount" type="xs:decimal"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="discounts" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="discount" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="xs:decimal">
+                                        <xs:attribute name="type" type="xs:string"/>
+                                        <xs:attribute name="amount" type="xs:decimal"/>
+                                        <xs:attribute name="description" type="xs:string"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="charges" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="charge" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:simpleContent>
+                                    <xs:extension base="xs:decimal">
+                                        <xs:attribute name="type" type="xs:string"/>
+                                        <xs:attribute name="amount" type="xs:decimal"/>
+                                    </xs:extension>
+                                </xs:simpleContent>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            
+            <xs:element name="grand_total" type="xs:decimal"/>
+            <xs:element name="rounding_adjustment" type="xs:decimal" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Payment Type Definition -->
+    <xs:complexType name="paymentType">
+        <xs:sequence>
+            <xs:element name="method" type="xs:string"/>
+            <xs:element name="card_type" type="xs:string" minOccurs="0"/>
+            <xs:element name="card_number_last_four" type="xs:string" minOccurs="0"/>
+            <xs:element name="card_holder_name" type="xs:string" minOccurs="0"/>
+            <xs:element name="authorization_code" type="xs:string"/>
+            <xs:element name="transaction_id" type="xs:string"/>
+            <xs:element name="payment_time" type="xs:dateTime"/>
+            <xs:element name="approved_amount" type="xs:decimal"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Loyalty Type Definition -->
+    <xs:complexType name="loyaltyType">
+        <xs:sequence>
+            <xs:element name="points_earned" type="xs:integer"/>
+            <xs:element name="points_redeemed" type="xs:integer"/>
+            <xs:element name="total_points_balance" type="xs:integer"/>
+            <xs:element name="member_tier" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Transaction Type Definition -->
+    <xs:complexType name="transactionType">
+        <xs:sequence>
+            <xs:element name="transaction_id" type="xs:string"/>
+            <xs:element name="receipt_number" type="xs:string"/>
+            <xs:element name="terminal_id" type="xs:string"/>
+            <xs:element name="cashier_id" type="xs:string"/>
+            <xs:element name="shift_id" type="xs:string"/>
+            <xs:element name="register_number" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Footer Type Definition -->
+    <xs:complexType name="footerType">
+        <xs:sequence>
+            <xs:element name="receipt_time" type="xs:dateTime"/>
+            <xs:element name="print_time" type="xs:dateTime" minOccurs="0"/>
+            <xs:element name="thank_you_message" type="xs:string"/>
+            <xs:element name="return_policy" type="xs:string"/>
+            <xs:element name="feedback_message" type="xs:string" minOccurs="0"/>
+            <xs:element name="website" type="xs:string" minOccurs="0"/>
+            
+            <xs:element name="social_media" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="facebook" type="xs:string" minOccurs="0"/>
+                        <xs:element name="twitter" type="xs:string" minOccurs="0"/>
+                        <xs:element name="instagram" type="xs:string" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <!-- Digital Signature Type -->
+    <xs:complexType name="digitalSignatureType">
+        <xs:sequence>
+            <!-- Digital signature content as text -->
+            <xs:element name="signature" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+        
+        <!-- Attributes for digital signature -->
+        <xs:attribute name="algorithm" type="xs:string" use="required"/>
+        <xs:attribute name="signature" type="xs:string" use="required"/>
+        <xs:attribute name="timestamp" type="xs:dateTime" use="required"/>
+    </xs:complexType>
+    
+    <!-- Data type restrictions and enumerations -->
+    <xs:simpleType name="paymentMethodType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Cash"/>
+            <xs:enumeration value="Credit Card"/>
+            <xs:enumeration value="Debit Card"/>
+            <xs:enumeration value="Mobile Money"/>
+            <xs:enumeration value="Bank Transfer"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="memberTierType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Bronze"/>
+            <xs:enumeration value="Silver"/>
+            <xs:enumeration value="Gold"/>
+            <xs:enumeration value="Platinum"/>
+            <xs:enumeration value="Diamond"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="countryCodeType">
+        <xs:restriction base="xs:string">
+            <xs:length value="2"/>
+            <xs:pattern value="[A-Z]{2}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <!-- Key constraints -->
+    <xs:key name="itemIdKey">
+        <xs:selector xpath="tns:items/tns:item"/>
+        <xs:field xpath="@item_id"/>
+    </xs:key>
+    
+    <!-- Unique constraints -->
+    <xs:unique name="customerEmailUnique">
+        <xs:selector xpath="tns:customer/tns:email"/>
+        <xs:field xpath="."/>
+    </xs:unique>
+</xs:schema>

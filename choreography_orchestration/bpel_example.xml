@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  Business Process Execution Language (BPEL) Example
+  for Shopping Receipt Web Service Integration
+  
+  This BPEL process demonstrates how to orchestrate multiple web services
+  to handle the complete order-to-receipt workflow using standardized
+  business process language.
+  
+  Author: Cavin Otieno
+  Course: SDS 6104 - Big Data Infrastructure, Platforms and Warehousing
+  Date: 2025-11-27
+-->
+<process name="ShoppingReceiptOrderProcess"
+    targetNamespace="http://supermarketplus.co.ke/receipt"
+    xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/abstract"
+    xmlns:tns="http://supermarketplus.co.ke/receipt"
+    xmlns:inv="http://inventory.supermarketplus.co.ke"
+    xmlns:pay="http://payment.supermarketplus.co.ke"
+    xmlns:ship="http://shipping.supermarketplus.co.ke"
+    xmlns:not="http://notification.supermarketplus.co.ke">
+
+    <!-- Partner Links Definition -->
+    <partnerLinks>
+        <!-- Customer partner - initiates the process -->
+        <partnerLink name="Customer"
+                     partnerRole="CustomerRole"
+                     myRole="OrderProcessor"/>
+        
+        <!-- Inventory Service Partner -->
+        <partnerLink name="InventoryService"
+                     partnerLinkType="inv:InventoryServiceLinkType"
+                     partnerRole="InventoryProvider"/>
+        
+        <!-- Payment Service Partner -->
+        <partnerLink name="PaymentService"
+                     partnerLinkType="pay:PaymentServiceLinkType"
+                     partnerRole="PaymentProvider"/>
+    </partnerLinks>
+
+    <!-- Variables Definition -->
+    <variables>
+        <!-- Order Data Variables -->
+        <variable name="OrderRequest" messageType="tns:OrderRequestMessage"/>
+        <variable name="OrderResponse" messageType="tns:OrderResponseMessage"/>
+        
+        <!-- Service Response Variables -->
+        <variable name="InventoryCheckResponse" messageType="inv:InventoryCheckResponseMessage"/>
+        <variable name="PaymentResponse" messageType="pay:PaymentResponseMessage"/>
+        
+        <!-- State Variables -->
+        <variable name="OrderId" type="xsd:string"/>
+        <variable name="CustomerId" type="xsd:string"/>
+        <variable name="TotalAmount" type="xsd:decimal"/>
+    </variables>
+
+    <!-- Main Process Flow -->
+    <sequence>
+        
+        <!-- STEP 1: Receive Order from Customer -->
+        <receive name="receiveOrderRequest"
+                 partnerLink="Customer"
+                 portType="tns:OrderProcessorPT"
+                 operation="submitOrder"
+                 variable="OrderRequest"
+                 createInstance="yes">
+        

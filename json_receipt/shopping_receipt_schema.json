@@ -1,0 +1,468 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Shopping Receipt",
+  "description": "Complete shopping receipt with customer, store, items, and payment information",
+  "type": "object",
+  "required": [
+    "receipt_id",
+    "purchase_date",
+    "store_name",
+    "cashier_id",
+    "payment_method",
+    "total_amount",
+    "customer",
+    "store",
+    "items",
+    "pricing",
+    "payment",
+    "transaction",
+    "footer",
+    "digital_signature"
+  ],
+  "properties": {
+    "receipt_id": {
+      "type": "string",
+      "description": "Unique receipt identifier",
+      "pattern": "^RCPT_[0-9]{4}_[0-9]{3}$"
+    },
+    "purchase_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of purchase in YYYY-MM-DD format"
+    },
+    "store_name": {
+      "type": "string",
+      "description": "Name of the store"
+    },
+    "cashier_id": {
+      "type": "string",
+      "description": "ID of the cashier who processed the transaction"
+    },
+    "payment_method": {
+      "type": "string",
+      "enum": ["Cash", "Credit Card", "Debit Card", "Mobile Money", "Bank Transfer"],
+      "description": "Method used for payment"
+    },
+    "total_amount": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Total amount paid including all charges and taxes"
+    },
+    "customer": {
+      "type": "object",
+      "required": ["customer_id", "name", "phone", "email"],
+      "properties": {
+        "customer_id": {
+          "type": "string",
+          "description": "Unique customer identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Customer full name"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Customer phone number with country code"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Customer email address"
+        },
+        "loyalty_member": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether customer is a loyalty program member"
+        },
+        "member_since": {
+          "type": "string",
+          "format": "date",
+          "description": "Date when customer joined loyalty program"
+        }
+      }
+    },
+    "store": {
+      "type": "object",
+      "required": ["store_id", "name", "address", "city", "country", "postal_code", "phone", "email", "tax_id"],
+      "properties": {
+        "store_id": {
+          "type": "string",
+          "description": "Unique store identifier"
+        },
+        "name": {
+          "type": "string",
+          "description": "Store name"
+        },
+        "address": {
+          "type": "string",
+          "description": "Full street address"
+        },
+        "city": {
+          "type": "string",
+          "description": "City name"
+        },
+        "country": {
+          "type": "string",
+          "description": "Country name"
+        },
+        "postal_code": {
+          "type": "string",
+          "description": "Postal or ZIP code"
+        },
+        "phone": {
+          "type": "string",
+          "description": "Store phone number"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Store email address"
+        },
+        "tax_id": {
+          "type": "string",
+          "description": "Tax identification number"
+        },
+        "business_license": {
+          "type": "string",
+          "description": "Business license number"
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "minItems": 5,
+      "description": "Array of shopping items, minimum 5 items required",
+      "items": {
+        "type": "object",
+        "required": ["item_id", "name", "category", "description", "quantity", "unit_price", "subtotal", "tax_applied", "discount_eligible"],
+        "properties": {
+          "item_id": {
+            "type": "string",
+            "description": "Unique item identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Item name"
+          },
+          "category": {
+            "type": "string",
+            "description": "Item category"
+          },
+          "subcategory": {
+            "type": "string",
+            "description": "Item subcategory"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed item description"
+          },
+          "brand": {
+            "type": "string",
+            "description": "Brand name"
+          },
+          "barcode": {
+            "type": "string",
+            "description": "Product barcode"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Quantity purchased"
+          },
+          "unit_price": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Price per unit"
+          },
+          "subtotal": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Subtotal for this item (quantity * unit_price)"
+          },
+          "tax_applied": {
+            "type": "boolean",
+            "description": "Whether tax was applied to this item"
+          },
+          "discount_eligible": {
+            "type": "boolean",
+            "description": "Whether this item is eligible for discounts"
+          }
+        }
+      }
+    },
+    "pricing": {
+      "type": "object",
+      "required": ["subtotal", "subtotal_excl_tax", "grand_total"],
+      "properties": {
+        "subtotal": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Total before taxes and discounts"
+        },
+        "subtotal_excl_tax": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Subtotal excluding all taxes"
+        },
+        "tax_details": {
+          "type": "object",
+          "description": "Detailed tax breakdown",
+          "properties": {
+            "tax": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["type", "rate", "amount"],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "description": "Type of tax (e.g., VAT, County_Tax)"
+                  },
+                  "rate": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Tax rate as decimal (e.g., 0.16 for 16%)"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Tax amount"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "discounts": {
+          "type": "object",
+          "description": "Discount details",
+          "properties": {
+            "discount": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["type", "amount"],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "description": "Type of discount"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "minimum": 0,
+                    "description": "Discount amount"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Discount description"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "charges": {
+          "type": "object",
+          "description": "Additional charges",
+          "properties": {
+            "charge": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["type", "amount"],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "description": "Type of charge (e.g., service_fee, delivery_fee)"
+                  },
+                  "amount": {
+                    "type": "number",
+                    "description": "Charge amount"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "grand_total": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Final total amount to be paid"
+        },
+        "rounding_adjustment": {
+          "type": "number",
+          "description": "Rounding adjustment amount"
+        }
+      }
+    },
+    "payment": {
+      "type": "object",
+      "required": ["method", "authorization_code", "transaction_id", "payment_time", "approved_amount"],
+      "properties": {
+        "method": {
+          "type": "string",
+          "description": "Payment method used"
+        },
+        "card_type": {
+          "type": "string",
+          "description": "Type of card if applicable"
+        },
+        "card_number_last_four": {
+          "type": "string",
+          "pattern": "^[0-9]{4}$",
+          "description": "Last four digits of card number"
+        },
+        "card_holder_name": {
+          "type": "string",
+          "description": "Name on the payment card"
+        },
+        "authorization_code": {
+          "type": "string",
+          "description": "Payment authorization code"
+        },
+        "transaction_id": {
+          "type": "string",
+          "description": "Unique transaction identifier"
+        },
+        "payment_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when payment was processed"
+        },
+        "approved_amount": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Amount approved by payment processor"
+        }
+      }
+    },
+    "loyalty": {
+      "type": "object",
+      "description": "Loyalty program information",
+      "properties": {
+        "points_earned": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Points earned from this transaction"
+        },
+        "points_redeemed": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Points redeemed in this transaction"
+        },
+        "total_points_balance": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total loyalty points balance"
+        },
+        "member_tier": {
+          "type": "string",
+          "enum": ["Bronze", "Silver", "Gold", "Platinum", "Diamond"],
+          "description": "Current membership tier"
+        }
+      }
+    },
+    "transaction": {
+      "type": "object",
+      "required": ["transaction_id", "receipt_number", "terminal_id", "cashier_id", "shift_id", "register_number"],
+      "properties": {
+        "transaction_id": {
+          "type": "string",
+          "description": "Unique transaction identifier"
+        },
+        "receipt_number": {
+          "type": "string",
+          "description": "Receipt number"
+        },
+        "terminal_id": {
+          "type": "string",
+          "description": "POS terminal identifier"
+        },
+        "cashier_id": {
+          "type": "string",
+          "description": "Cashier identifier"
+        },
+        "shift_id": {
+          "type": "string",
+          "description": "Work shift identifier"
+        },
+        "register_number": {
+          "type": "string",
+          "description": "Cash register number"
+        }
+      }
+    },
+    "footer": {
+      "type": "object",
+      "required": ["receipt_time", "thank_you_message", "return_policy"],
+      "properties": {
+        "receipt_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when receipt was generated"
+        },
+        "print_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when receipt was printed"
+        },
+        "thank_you_message": {
+          "type": "string",
+          "description": "Thank you message for customer"
+        },
+        "return_policy": {
+          "type": "string",
+          "description": "Return policy information"
+        },
+        "feedback_message": {
+          "type": "string",
+          "description": "Feedback request message"
+        },
+        "website": {
+          "type": "string",
+          "format": "uri",
+          "description": "Store website URL"
+        },
+        "social_media": {
+          "type": "object",
+          "description": "Social media handles",
+          "properties": {
+            "facebook": {
+              "type": "string",
+              "description": "Facebook page URL or handle"
+            },
+            "twitter": {
+              "type": "string",
+              "description": "Twitter handle"
+            },
+            "instagram": {
+              "type": "string",
+              "description": "Instagram handle"
+            }
+          }
+        }
+      }
+    },
+    "digital_signature": {
+      "type": "object",
+      "required": ["algorithm", "signature", "timestamp"],
+      "properties": {
+        "algorithm": {
+          "type": "string",
+          "description": "Hash algorithm used for digital signature"
+        },
+        "signature": {
+          "type": "string",
+          "description": "Digital signature value"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when signature was generated"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

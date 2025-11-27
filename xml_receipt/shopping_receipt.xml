@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shopping_receipt receipt_id="RCPT_2025_001" 
+                  purchase_date="2025-11-27" 
+                  store_name="SuperMarket Plus"
+                  cashier_id="CSH_001"
+                  payment_method="Credit Card"
+                  total_amount="147.90">
+    
+    <!-- Customer Information -->
+    <customer>
+        <customer_id>CUST_12345</customer_id>
+        <name>John Doe</name>
+        <phone>+254712345678</phone>
+        <email>john.doe@email.com</email>
+        <loyalty_member>true</loyalty_member>
+        <member_since>2020-03-15</member_since>
+    </customer>
+    
+    <!-- Store Information -->
+    <store>
+        <store_id>STORE_001</store_id>
+        <name>SuperMarket Plus</name>
+        <address>123 Main Street, Nairobi, Kenya</address>
+        <city>Nairobi</city>
+        <country>Kenya</country>
+        <postal_code>00100</postal_code>
+        <phone>+254201234567</phone>
+        <email>info@supermarketplus.co.ke</email>
+        <tax_id>TIN123456789</tax_id>
+        <business_license>BL789456123</business_license>
+    </store>
+    
+    <!-- Shopping Items -->
+    <items>
+        <item item_id="001" quantity="2" unit_price="25.99">
+            <name>Premium Coffee Beans</name>
+            <category>Food &amp; Beverages</category>
+            <subcategory>Coffee</subcategory>
+            <description>Organic Arabica Coffee Beans 1kg - Premium Grade</description>
+            <brand>Mountain Peak</brand>
+            <barcode>1234567890123</barcode>
+            <subtotal>51.98</subtotal>
+            <tax_applied>true</tax_applied>
+            <discount_eligible>true</discount_eligible>
+        </item>
+        
+        <item item_id="002" quantity="1" unit_price="15.50">
+            <name>Whole Wheat Bread</name>
+            <category>Bakery</category>
+            <subcategory>Bread</subcategory>
+            <description>Freshly baked whole wheat loaf - 800g</description>
+            <brand>Artisan Bakers</brand>
+            <barcode>1234567890124</barcode>
+            <subtotal>15.50</subtotal>
+            <tax_applied>true</tax_applied>
+            <discount_eligible>false</discount_eligible>
+        </item>
+        
+        <item item_id="003" quantity="3" unit_price="8.75">
+            <name>Greek Yogurt</name>
+            <category>Dairy</category>
+            <subcategory>Yogurt</subcategory>
+            <description>Plain Greek yogurt 500g - Low fat</description>
+            <brand>Dairy Fresh</brand>
+            <barcode>1234567890125</barcode>
+            <subtotal>26.25</subtotal>
+            <tax_applied>true</tax_applied>
+            <discount_eligible>true</discount_eligible>
+        </item>
+        
+        <item item_id="004" quantity="1" unit_price="12.99">
+            <name>Organic Bananas</name>
+            <category>Fresh Produce</category>
+            <subcategory>Fruits</subcategory>
+            <description>Fresh organic bananas per kg</description>
+            <brand>Green Valley Farms</brand>
+            <barcode>1234567890126</barcode>
+            <subtotal>12.99</subtotal>
+            <tax_applied>false</tax_applied>
+            <discount_eligible>true</discount_eligible>
+        </item>
+        
+        <item item_id="005" quantity="1" unit_price="20.78">
+            <name>Chicken Breast</name>
+            <category>Meat &amp; Poultry</category>
+            <subcategory>Poultry</subcategory>
+            <description>Fresh chicken breast (skinless, boneless) - 1kg</description>
+            <brand>Farm Fresh</brand>
+            <barcode>1234567890127</barcode>
+            <subtotal>20.78</subtotal>
+            <tax_applied>true</tax_applied>
+            <discount_eligible>false</discount_eligible>
+        </item>
+        
+        <item item_id="006" quantity="1" unit_price="8.99">
+            <name>Avocados</name>
+            <category>Fresh Produce</category>
+            <subcategory>Fruits</subcategory>
+            <description>Fresh Hass avocados - 3 pieces pack</description>
+            <brand>Green Valley Farms</brand>
+            <barcode>1234567890128</barcode>
+            <subtotal>8.99</subtotal>
+            <tax_applied>false</tax_applied>
+            <discount_eligible>true</discount_eligible>
+        </item>
+        
+        <item item_id="007" quantity="2" unit_price="3.49">
+            <name>Eggs</name>
+            <category>Dairy</category>
+            <subcategory>Eggs</subcategory>
+            <description>Free-range eggs - 6 pieces carton</description>
+            <brand>Happy Farm</brand>
+            <barcode>1234567890129</barcode>
+            <subtotal>6.98</subtotal>
+            <tax_applied>true</tax_applied>
+            <discount_eligible>true</discount_eligible>
+        </item>
+    </items>
+    
+    <!-- Pricing Summary -->
+    <pricing>
+        <subtotal>143.47</subtotal>
+        <subtotal_excl_tax>126.45</subtotal_excl_tax>
+        <tax_details>
+            <tax type="VAT" rate="0.16" amount="22.95">22.95</tax>
+            <tax type="County_Tax" rate="0.01" amount="1.43">1.43</tax>
+        </tax_details>
+        <discounts>
+            <discount type="loyalty_points" amount="0.00" description="Loyalty points discount">0.00</discount>
+            <discount type="promotional" amount="0.00" description="Promotional discount">0.00</discount>
+        </discounts>
+        <charges>
+            <charge type="service_fee" amount="0.00">0.00</charge>
+            <charge type="delivery_fee" amount="0.00">0.00</charge>
+        </charges>
+        <grand_total>147.90</grand_total>
+        <rounding_adjustment>0.05</rounding_adjustment>
+    </pricing>
+    
+    <!-- Payment Details -->
+    <payment>
+        <method>Credit Card</method>
+        <card_type>Visa</card_type>
+        <card_number_last_four>4567</card_number_last_four>
+        <card_holder_name>John Doe</card_holder_name>
+        <authorization_code>AUTH123456789</authorization_code>
+        <transaction_id>TXN789123456</transaction_id>
+        <payment_time>2025-11-27T14:30:25Z</payment_time>
+        <approved_amount>147.90</approved_amount>
+    </payment>
+    
+    <!-- Additional Information -->
+    <loyalty>
+        <points_earned>15</points_earned>
+        <points_redeemed>0</points_redeemed>
+        <total_points_balance>342</total_points_balance>
+        <member_tier>Gold</member_tier>
+    </loyalty>
+    
+    <!-- Transaction Details -->
+    <transaction>
+        <transaction_id>TXN_2025_001_456</transaction_id>
+        <receipt_number>RCPT_2025_001_456</receipt_number>
+        <terminal_id>TERM_001</terminal_id>
+        <cashier_id>CSH_001</cashier_id>
+        <shift_id>SHIFT_001</shift_id>
+        <register_number>REG_003</register_number>
+    </transaction>
+    
+    <!-- Footer Information -->
+    <footer>
+        <receipt_time>2025-11-27T14:30:25Z</receipt_time>
+        <print_time>2025-11-27T14:30:26Z</print_time>
+        <thank_you_message>Thank you for shopping with us!</thank_you_message>
+        <return_policy>30-day return policy with original receipt</return_policy>
+        <feedback_message>Rate your experience: www.supermarketplus.co.ke/feedback</feedback_message>
+        <website>www.supermarketplus.co.ke</website>
+        <social_media>
+            <facebook>facebook.com/supermarketplus</facebook>
+            <twitter>@supermarketplus</twitter>
+            <instagram>instagram.com/supermarketplus</instagram>
+        </social_media>
+    </footer>
+    
+    <!-- Digital Signature for authenticity -->
+    <digital_signature algorithm="SHA256" signature="a1b2c3d4e5f6..." timestamp="2025-11-27T14:30:25Z"/>
+</shopping_receipt>

@@ -10,7 +10,7 @@
     <AssemblyTitle>Shopping Receipt Service</AssemblyTitle>
     <AssemblyDescription>Web Service for managing shopping receipts with XML/JSON support</AssemblyDescription>
     <AssemblyProduct>SDS 6104 - Big Data Infrastructure</AssemblyProduct>
-    <AssemblyCopyright>Copyright © MiniMax Agent 2025</AssemblyCopyright>
+    <AssemblyCopyright>Copyright © Cavin Otieno 2025</AssemblyCopyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
